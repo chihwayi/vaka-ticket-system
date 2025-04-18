@@ -1,0 +1,350 @@
+// Variables
+$primary-color: #1976d2;
+$accent-color: #ff4081;
+$light-bg: #f5f7fa;
+$dark-text: #333;
+$light-text: #fff;
+$card-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+
+// Status colors
+$status-open: #2196f3;
+$status-in-progress: #ff9800;
+$status-resolved: #4caf50;
+$status-closed: #9e9e9e;
+
+// Priority colors
+$priority-low: #8bc34a;
+$priority-medium: #ff9800;
+$priority-high: #f44336;
+$priority-critical: #9c27b0;
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// Hero Section
+.hero {
+  background: linear-gradient(135deg, darken($primary-color, 15%), lighten($primary-color, 15%));
+  color: $light-text;
+  padding: 4rem 2rem;
+  text-align: center;
+  
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 300;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+  
+  .guest-actions, .user-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    
+    button {
+      min-width: 150px;
+      
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+// Dashboard
+.dashboard {
+  padding: 2rem;
+  background-color: $light-bg;
+  
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+    
+    .stat-card {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      border-radius: 8px;
+      box-shadow: $card-shadow;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      
+      .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      
+      .stat-label {
+        font-size: 1rem;
+        color: rgba($dark-text, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      &.open {
+        border-top: 3px solid $status-open;
+        .stat-value { color: $status-open; }
+      }
+      
+      &.in-progress {
+        border-top: 3px solid $status-in-progress;
+        .stat-value { color: $status-in-progress; }
+      }
+      
+      &.resolved {
+        border-top: 3px solid $status-resolved;
+        .stat-value { color: $status-resolved; }
+      }
+      
+      &.closed {
+        border-top: 3px solid $status-closed;
+        .stat-value { color: $status-closed; }
+      }
+    }
+  }
+  
+  .recent-tickets {
+    background: white;
+    border-radius: 8px;
+    box-shadow: $card-shadow;
+    padding: 1.5rem;
+    
+    h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      color: $dark-text;
+      font-size: 1.5rem;
+    }
+    
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      
+      p {
+        margin-top: 1rem;
+        color: rgba($dark-text, 0.6);
+      }
+    }
+    
+    .no-tickets {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1rem;
+      color: rgba($dark-text, 0.6);
+      
+      mat-icon {
+        font-size: 48px;
+        height: 48px;
+        width: 48px;
+        margin-bottom: 1rem;
+      }
+    }
+    
+    mat-nav-list {
+      a {
+        border-left: 3px solid transparent;
+        margin-bottom: 4px;
+        transition: background-color 0.2s ease;
+        
+        &:hover {
+          background-color: rgba($primary-color, 0.05);
+        }
+      }
+    }
+    
+    .ticket-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    
+    .status-badge {
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      color: white;
+      
+      &.open {
+        background-color: $status-open;
+      }
+      
+      &.in_progress {
+        background-color: $status-in-progress;
+      }
+      
+      &.resolved {
+        background-color: $status-resolved;
+      }
+      
+      &.closed {
+        background-color: $status-closed;
+      }
+    }
+    
+    .priority-indicator {
+      font-size: 0.8rem;
+      font-weight: 500;
+      
+      &.priority-low {
+        color: $priority-low;
+      }
+      
+      &.priority-medium {
+        color: $priority-medium;
+      }
+      
+      &.priority-high {
+        color: $priority-high;
+      }
+      
+      &.priority-critical {
+        color: $priority-critical;
+      }
+    }
+    
+    .view-all-link {
+      margin-top: 1rem;
+      text-align: right;
+      
+      a {
+        text-decoration: none;
+        
+        mat-icon {
+          margin-left: 4px;
+          font-size: 18px;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+}
+
+// Admin/Support Actions
+.admin-actions {
+  padding: 2rem;
+  background-color: white;
+  
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    color: $dark-text;
+    font-size: 1.5rem;
+  }
+  
+  .action-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    
+    .action-card {
+      box-shadow: $card-shadow;
+      border-radius: 8px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      }
+      
+      mat-card-header {
+        margin-bottom: 1rem;
+        
+        mat-icon {
+          color: $primary-color;
+          font-size: 28px;
+          height: 36px;
+          width: 36px;
+        }
+      }
+      
+      mat-card-content {
+        color: rgba($dark-text, 0.7);
+      }
+      
+      mat-card-actions {
+        padding: 0 16px 16px;
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+
+// About Section
+.about {
+  padding: 3rem 2rem;
+  background-color: darken($light-bg, 2%);
+  
+  .about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    
+    h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      color: $dark-text;
+      font-size: 1.8rem;
+    }
+    
+    p {
+      color: rgba($dark-text, 0.8);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+  }
+}
+// Media Queries
+@media (max-width: 768px) {
+    .hero {
+      padding: 3rem 1rem;
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      p {
+        font-size: 1rem;
+      }
+      
+      .guest-actions, .user-actions {
+        flex-direction: column;
+        align-items: center;
+        
+        button {
+          width: 100%;
+          max-width: 300px;
+        }
+      }
+    }
+    
+    .dashboard, .admin-actions, .about {
+      padding: 1.5rem 1rem;
+    }
+    
+    .stats-container {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+}

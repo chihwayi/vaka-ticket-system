@@ -1,0 +1,123 @@
+.ticket-list-container {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  
+  .ticket-list-card {
+    margin-bottom: 20px;
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .title-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .title-icon {
+    margin-right: 8px;
+  }
+  
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .tickets-table {
+    width: 100%;
+  }
+  
+  .ticket-title {
+    color: #3f51b5;
+    cursor: pointer;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  .status-chip {
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    
+    &.status-open {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    &.status-in-progress {
+      background-color: #e8f5e9;
+      color: #388e3c;
+    }
+    
+    &.status-resolved {
+      background-color: #e8eaf6;
+      color: #3f51b5;
+    }
+    
+    &.status-closed {
+      background-color: #efebe9;
+      color: #5d4037;
+    }
+  }
+  
+  .priority-chip {
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    
+    &.priority-low {
+      background-color: #e0f7fa;
+      color: #0097a7;
+    }
+    
+    &.priority-medium {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+    
+    &.priority-high {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+    
+    &.priority-urgent {
+      background-color: #d50000;
+      color: white;
+    }
+  }
+  
+  .no-data {
+    padding: 20px;
+    text-align: center;
+    font-style: italic;
+    color: rgba(0, 0, 0, 0.54);
+  }
+  
+  @media (max-width: 768px) {
+    .tickets-table {
+      min-width: 800px;
+    }
+  }

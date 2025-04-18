@@ -1,0 +1,163 @@
+.ticket-detail-container {
+    padding: 20px;
+  
+    .back-button {
+      margin-bottom: 20px;
+    }
+  
+    .loading-spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 300px;
+    }
+  
+    .ticket-content {
+      .ticket-header {
+        margin-bottom: 20px;
+  
+        .ticket-title {
+          display: flex;
+          align-items: center;
+          
+          .ticket-id {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-right: 10px;
+          }
+        }
+  
+        .ticket-meta {
+          display: flex;
+          flex-wrap: wrap;
+          margin: 20px 0;
+          
+          .meta-item {
+            margin-right: 30px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            
+            .meta-label {
+              font-weight: 500;
+              margin-right: 8px;
+            }
+            
+            .unassigned {
+              font-style: italic;
+              color: #999;
+            }
+          }
+        }
+  
+        .ticket-description {
+          margin-top: 20px;
+          
+          h3 {
+            margin-bottom: 10px;
+            font-weight: 500;
+          }
+          
+          p {
+            white-space: pre-line;
+          }
+        }
+  
+        .ticket-actions {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          
+          .action-group {
+            display: flex;
+            margin-bottom: 10px;
+            
+            button {
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+  
+      .assign-card {
+        margin-bottom: 20px;
+        
+        .assign-form {
+          display: flex;
+          align-items: center;
+          
+          mat-form-field {
+            flex: 1;
+            margin-right: 15px;
+          }
+        }
+      }
+    }
+  
+    .not-found {
+      text-align: center;
+      padding: 40px;
+      
+      h2 {
+        color: #f44336;
+        margin-bottom: 20px;
+      }
+      
+      p {
+        margin-bottom: 20px;
+        color: #666;
+      }
+    }
+  
+    .status-chip, .priority-chip {
+      padding: 4px 8px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-block;
+      text-transform: uppercase;
+    }
+  
+    .status-open {
+      background-color: #e3f2fd;
+      color: #1565c0;
+    }
+  
+    .status-in-progress {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+  
+    .status-resolved {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+  
+    .status-closed {
+      background-color: #efebe9;
+      color: #5d4037;
+    }
+  
+    .priority-low {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+  
+    .priority-medium {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+  
+    .priority-high {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+  
+    .priority-urgent {
+      background-color: #c62828;
+      color: white;
+    }
+  }

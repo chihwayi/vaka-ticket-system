@@ -1,0 +1,17 @@
+.comment-form-container {
+    margin: 20px 0;
+    
+    .full-width {
+      width: 100%;
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      
+      .spinner {
+        margin-left: 10px;
+      }
+    }
+  }

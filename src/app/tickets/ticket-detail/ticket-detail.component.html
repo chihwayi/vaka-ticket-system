@@ -1,0 +1,137 @@
+<div class="ticket-detail-container">
+    <div class="back-button">
+      <button mat-button [routerLink]="['/tickets']">
+        <mat-icon>arrow_back</mat-icon> Back to Tickets
+      </button>
+    </div>
+  
+    <div class="loading-spinner" *ngIf="loading">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  
+    <div *ngIf="!loading && ticket" class="ticket-content">
+      <mat-card class="ticket-header">
+        <mat-card-header>
+          <mat-card-title>
+            <div class="ticket-title">
+              <span class="ticket-id">#{{ ticket.id }}</span>
+              {{ ticket.title }}
+            </div>
+          </mat-card-title>
+          <mat-card-subtitle>
+            Created {{ ticket.createdAt | date:'medium' }} by {{ ticket.creator?.fullName || ticket.creator?.username }}
+          </mat-card-subtitle>
+        </mat-card-header>
+  
+        <mat-card-content>
+          <div class="ticket-meta">
+            <div class="meta-item">
+              <span class="meta-label">Status:</span>
+              <span class="status-chip" [ngClass]="getStatusClass(ticket.status)">
+                {{ ticket.status }}
+              </span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Priority:</span>
+              <span class="priority-chip" [ngClass]="getPriorityClass(ticket.priority)">
+                {{ ticket.priority }}
+              </span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Assigned to:</span>
+              <span *ngIf="ticket.assignedTo">
+                {{ ticket.assignedTo.fullName || ticket.assignedTo.username }}
+              </span>
+              <span *ngIf="!ticket.assignedTo" class="unassigned">Unassigned</span>
+            </div>
+          </div>
+  
+          <mat-divider></mat-divider>
+  
+          <div class="ticket-description">
+            <h3>Description</h3>
+            <p>{{ ticket.description }}</p>
+          </div>
+        </mat-card-content>
+  
+        <mat-card-actions>
+          <div class="ticket-actions">
+            <div class="action-group">
+              <button mat-raised-button color="primary" *ngIf="canEdit" (click)="editTicket()">
+                <mat-icon>edit</mat-icon> Edit
+              </button>
+              <button mat-raised-button color="warn" *ngIf="canDelete" (click)="deleteTicket()">
+                <mat-icon>delete</mat-icon> Delete
+              </button>
+            </div>
+  
+            <div class="action-group">
+              <!-- Status update buttons -->
+              <ng-container [ngSwitch]="ticket.status">
+                <button *ngSwitchCase="ticketStatus.OPEN" 
+                        mat-raised-button color="accent" 
+                        (click)="updateStatus(ticketStatus.IN_PROGRESS)">
+                  <mat-icon>play_arrow</mat-icon> Start Working
+                </button>
+                
+                <button *ngSwitchCase="ticketStatus.IN_PROGRESS" 
+                        mat-raised-button color="accent" 
+                        (click)="updateStatus(ticketStatus.RESOLVED)">
+                  <mat-icon>check</mat-icon> Mark Resolved
+                </button>
+                
+                <button *ngSwitchCase="ticketStatus.RESOLVED" 
+                        mat-raised-button color="accent" 
+                        (click)="updateStatus(ticketStatus.CLOSED)">
+                  <mat-icon>archive</mat-icon> Close Ticket
+                </button>
+                
+                <button *ngSwitchCase="ticketStatus.CLOSED" 
+                        mat-raised-button color="accent" 
+                        (click)="updateStatus(ticketStatus.OPEN)">
+                  <mat-icon>restore</mat-icon> Reopen
+                </button>
+              </ng-container>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+  
+      <!-- Assignee Selection (for admin and support) -->
+      <mat-card *ngIf="canAssign" class="assign-card">
+        <mat-card-content>
+          <div class="assign-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Assign to</mat-label>
+              <mat-select [(ngModel)]="selectedAssigneeId">
+                <mat-option [value]="null">Unassigned</mat-option>
+                <mat-option *ngFor="let user of users" [value]="user.id">
+                  {{ user.fullName || user.username }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="assignTicket()">
+              <mat-icon>person_add</mat-icon> Assign
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+  
+      <!-- Comments Section -->
+
+      <!--
+      <ng-container *ngIf="ticket && ticket.id">
+        <app-comment-list [ticketId]="ticket.id"></app-comment-list>
+        <app-comment-form [ticketId]="ticket.id" (commentAdded)="onCommentAdded()"></app-comment-form>
+      </ng-container>
+      -->
+      <app-comment-list [ticketId]="ticket.id || 0"></app-comment-list>
+      <app-comment-form [ticketId]="ticket.id || 0" (commentAdded)="onCommentAdded()"></app-comment-form>
+    </div>
+  
+    <div *ngIf="!loading && !ticket" class="not-found">
+      <h2>Ticket Not Found</h2>
+      <p>The ticket you are looking for does not exist or you don't have permission to view it.</p>
+      <button mat-raised-button color="primary" [routerLink]="['/tickets']">Return to Tickets</button>
+    </div>
+  </div>

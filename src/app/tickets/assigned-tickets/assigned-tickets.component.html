@@ -1,0 +1,117 @@
+<div class="assigned-tickets-container">
+    <h2>Tickets Assigned To Me</h2>
+    
+    <div class="tickets-actions">
+      <button mat-raised-button color="primary" [routerLink]="['/tickets']">
+        <mat-icon>list</mat-icon> All Tickets
+      </button>
+    </div>
+  
+    <div class="loading-spinner" *ngIf="loading">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  
+    <div class="mat-elevation-z8 tickets-table" *ngIf="!loading">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td mat-cell *matCellDef="let ticket">#{{ ticket.id }}</td>
+        </ng-container>
+  
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+          <td mat-cell *matCellDef="let ticket">{{ ticket.title }}</td>
+        </ng-container>
+  
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+          <td mat-cell *matCellDef="let ticket">
+            <span class="status-chip" [ngClass]="getStatusClass(ticket.status)">
+              {{ ticket.status }}
+            </span>
+          </td>
+        </ng-container>
+  
+        <!-- Priority Column -->
+        <ng-container matColumnDef="priority">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Priority</th>
+          <td mat-cell *matCellDef="let ticket">
+            <span class="priority-chip" [ngClass]="getPriorityClass(ticket.priority)">
+              {{ ticket.priority }}
+            </span>
+          </td>
+        </ng-container>
+  
+        <!-- Creator Column -->
+        <ng-container matColumnDef="creator">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Created By</th>
+          <td mat-cell *matCellDef="let ticket">{{ ticket.creator?.fullName || ticket.creator?.username }}</td>
+        </ng-container>
+  
+        <!-- Created Date Column -->
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
+          <td mat-cell *matCellDef="let ticket">{{ ticket.createdAt | date:'medium' }}</td>
+        </ng-container>
+  
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let ticket">
+            <button mat-icon-button color="primary" (click)="viewTicket(ticket.id)" matTooltip="View Ticket">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            
+            <!-- Status change buttons based on current status -->
+            <ng-container [ngSwitch]="ticket.status">
+              <button *ngSwitchCase="ticketStatus.OPEN" 
+                      mat-icon-button color="accent" 
+                      (click)="updateStatus(ticket, ticketStatus.IN_PROGRESS)"
+                      matTooltip="Start Working">
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+              
+              <button *ngSwitchCase="ticketStatus.IN_PROGRESS" 
+                      mat-icon-button color="accent" 
+                      (click)="updateStatus(ticket, ticketStatus.RESOLVED)"
+                      matTooltip="Mark Resolved">
+                <mat-icon>check</mat-icon>
+              </button>
+              
+              <button *ngSwitchCase="ticketStatus.RESOLVED" 
+                      mat-icon-button color="warn" 
+                      (click)="updateStatus(ticket, ticketStatus.CLOSED)"
+                      matTooltip="Close Ticket">
+                <mat-icon>archive</mat-icon>
+              </button>
+              
+              <button *ngSwitchCase="ticketStatus.CLOSED" 
+                      mat-icon-button color="primary" 
+                      (click)="updateStatus(ticket, ticketStatus.OPEN)"
+                      matTooltip="Reopen Ticket">
+                <mat-icon>restore</mat-icon>
+              </button>
+            </ng-container>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="ticket-row"></tr>
+      </table>
+  
+      <mat-paginator 
+        [pageSizeOptions]="[5, 10, 25, 50]" 
+        [pageSize]="pageSize"
+        [length]="totalElements"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+  
+      <div class="no-data-message" *ngIf="dataSource.data.length === 0">
+        <p>No tickets are currently assigned to you.</p>
+      </div>
+    </div>
+  </div>

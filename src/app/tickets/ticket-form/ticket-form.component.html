@@ -1,0 +1,42 @@
+<div class="form-container">
+    <h2 class="form-title">{{ editMode ? 'Edit Ticket' : 'Create New Ticket' }}</h2>
+    
+    <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()" class="ticket-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter ticket title">
+        <mat-error *ngIf="f['title'].errors?.['required']">Title is required</mat-error>
+        <mat-error *ngIf="f['title'].errors?.['minlength']">Title must be at least 5 characters</mat-error>
+        <mat-error *ngIf="f['title'].errors?.['maxlength']">Title cannot exceed 100 characters</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" placeholder="Enter ticket description" rows="6"></textarea>
+        <mat-error *ngIf="f['description'].errors?.['required']">Description is required</mat-error>
+        <mat-error *ngIf="f['description'].errors?.['minlength']">Description must be at least 10 characters</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Priority</mat-label>
+        <mat-select formControlName="priority">
+          <mat-option *ngFor="let priority of priorities" [value]="priority">
+            {{ priority }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="f['priority'].errors?.['required']">Priority is required</mat-error>
+      </mat-form-field>
+      
+      <div class="form-actions">
+        <button mat-button type="button" (click)="cancel()">Cancel</button>
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit" 
+          [disabled]="loading || ticketForm.invalid">
+          {{ loading ? 'Saving...' : (editMode ? 'Update Ticket' : 'Create Ticket') }}
+          <mat-icon *ngIf="loading" class="loading-icon">loop</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>

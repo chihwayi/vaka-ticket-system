@@ -1,0 +1,53 @@
+.comments-container {
+    margin-top: 20px;
+  
+    h3 {
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+  
+    .loading-spinner {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+  
+    .no-comments {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-style: italic;
+    }
+  
+    .comment-list {
+      .comment-item {
+        margin-bottom: 15px;
+        border-left: 3px solid #3f51b5;
+  
+        .avatar {
+          background-color: #e3f2fd;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #1565c0;
+        }
+  
+        .edited-label {
+          font-size: 12px;
+          color: #666;
+          margin-left: 5px;
+        }
+  
+        .comment-text {
+          white-space: pre-line;
+          margin: 10px 0;
+        }
+  
+        .edit-comment-form {
+          .full-width {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }

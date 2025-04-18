@@ -1,0 +1,42 @@
+<mat-toolbar color="primary" class="app-header">
+    <button 
+      mat-icon-button 
+      class="menu-button" 
+      (click)="onToggleSidebar()"
+      *ngIf="isLoggedIn"
+      aria-label="Toggle sidebar">
+      <mat-icon>menu</mat-icon>
+    </button>
+    
+    <a routerLink="/" class="logo-container">
+      <span class="logo">Vaka Health Foundation</span>
+      <span class="subtitle">Ticket System</span>
+    </a>
+    
+    <span class="spacer"></span>
+    
+    <ng-container *ngIf="isLoggedIn; else loginButtons">
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-button">
+        <mat-icon>account_circle</mat-icon>
+        <span class="username">{{ currentUser?.username }}</span>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <div class="user-info">
+          <p class="full-name">{{ currentUser?.fullName }}</p>
+          <p class="email">{{ currentUser?.email }}</p>
+          <mat-divider></mat-divider>
+        </div>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </ng-container>
+    
+    <ng-template #loginButtons>
+      <button mat-button routerLink="/auth/login">
+        <mat-icon>login</mat-icon>
+        <span>Login</span>
+      </button>
+    </ng-template>
+  </mat-toolbar>

@@ -1,0 +1,58 @@
+<div class="comments-container">
+    <h3>Comments</h3>
+    
+    <div class="loading-spinner" *ngIf="loading">
+      <mat-spinner diameter="30"></mat-spinner>
+    </div>
+  
+    <div class="comment-list" *ngIf="!loading">
+      <div *ngIf="comments.length === 0" class="no-comments">
+        <p>No comments yet.</p>
+      </div>
+  
+      <mat-card class="comment-item" *ngFor="let comment of comments">
+        <mat-card-header>
+          <div mat-card-avatar class="avatar">
+            <mat-icon>account_circle</mat-icon>
+          </div>
+          <mat-card-title>
+            {{ comment.createdBy?.fullName || comment.createdBy?.username || 'Unknown User' }}
+          </mat-card-title>
+          <mat-card-subtitle>
+            {{ getTimeAgo(comment.createdAt) }}
+            <span *ngIf="comment.updatedAt !== comment.createdAt" class="edited-label">(edited)</span>
+          </mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div *ngIf="editingCommentId !== comment.id">
+            <p class="comment-text">{{ comment.content }}</p>
+          </div>
+          <div *ngIf="editingCommentId === comment.id" class="edit-comment-form">
+            <mat-form-field appearance="fill" class="full-width">
+              <textarea matInput [(ngModel)]="editCommentText" rows="3"></textarea>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+        
+        <mat-card-actions *ngIf="canModifyComment(comment)" align="end">
+          <div *ngIf="editingCommentId !== comment.id">
+            <button mat-button color="primary" (click)="startEdit(comment)">
+              <mat-icon>edit</mat-icon> Edit
+            </button>
+            <button mat-button color="warn" (click)="comment.id && deleteComment(comment.id)">
+              <mat-icon>delete</mat-icon> Delete
+            </button>
+          </div>
+          <div *ngIf="editingCommentId === comment.id">
+            <button mat-button color="primary" (click)="saveEdit(comment)">
+              <mat-icon>save</mat-icon> Save
+            </button>
+            <button mat-button (click)="cancelEdit()">
+              <mat-icon>cancel</mat-icon> Cancel
+            </button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>

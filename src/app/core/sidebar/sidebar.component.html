@@ -1,0 +1,46 @@
+<div class="sidebar-container">
+  <div class="menu-section">
+    <h3 class="menu-title">Dashboard</h3>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home" routerLinkActive="active">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+    </mat-nav-list>
+  </div>
+  <div class="menu-section">
+    <h3 class="menu-title">Tickets</h3>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/tickets" routerLinkActive="active">
+        <mat-icon matListItemIcon>list</mat-icon>
+        <span matListItemTitle>All Tickets</span>
+      </a>
+      <a mat-list-item routerLink="/tickets/my-tickets" routerLinkActive="active">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <span matListItemTitle>My Tickets</span>
+      </a>
+      <a mat-list-item *ngIf="isAdmin || isSupport" routerLink="/tickets/assigned" routerLinkActive="active">
+        <mat-icon matListItemIcon>assignment_ind</mat-icon>
+        <span matListItemTitle>Assigned to Me</span>
+      </a>
+      <a mat-list-item routerLink="/tickets/new" routerLinkActive="active">
+        <mat-icon matListItemIcon>add_circle</mat-icon>
+        <span matListItemTitle>Create Ticket</span>
+      </a>
+    </mat-nav-list>
+  </div>
+
+  <div class="menu-section" *ngIf="isAdmin">
+    <h3 class="menu-title">Administration</h3>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/admin/users" routerLinkActive="active">
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span matListItemTitle>User Management</span>
+      </a>
+      <a mat-list-item routerLink="/admin/reports" routerLinkActive="active">
+        <mat-icon matListItemIcon>bar_chart</mat-icon>
+        <span matListItemTitle>Reports</span>
+      </a>
+    </mat-nav-list>
+  </div>
+</div>
