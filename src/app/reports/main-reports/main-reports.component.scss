@@ -1,0 +1,159 @@
+.reports-container {
+    padding: 20px;
+  max-width: 100%;
+  overflow-x: hidden;
+  
+    .reports-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      
+      .title-section {
+        h1 {
+          font-size: 28px;
+          margin: 0;
+          color: #333;
+        }
+        
+        .subtitle {
+          color: #666;
+          margin-top: 5px;
+        }
+      }
+      
+      .actions-section {
+        display: flex;
+        gap: 10px;
+      }
+    }
+    
+    .filters-section {
+      margin-bottom: 20px;
+      
+      .filter-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: center;
+        
+        mat-form-field {
+          flex: 1 1 200px;
+        }
+      }
+    }
+    
+    .reports-content {
+        .tab-content {
+          padding: 20px 0;
+        }
+        
+        .report-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+          gap: 20px;
+          
+          .report-card {
+            height: auto; // Changed from 100% to auto to prevent fixed height issues
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden; // Added to contain all content
+            
+            &:hover {
+              transform: translateY(-5px);
+              box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            }
+            
+            mat-card-header {
+              padding-bottom: 10px;
+            
+            [mat-card-avatar] {
+              background-color: #f0f8ff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
+              width: 40px;
+              height: 40px;
+              
+              mat-icon {
+                color: #3f51b5;
+              }
+            }
+            
+            mat-card-title {
+              font-size: 18px;
+              font-weight: 500;
+            }
+          }
+          
+          mat-card-content {
+            min-height: auto; 
+            height: 100%; 
+            display: block; 
+            overflow: visible; 
+          }
+        }
+        
+        .full-width {
+          grid-column: 1 / -1;
+        }
+        
+        // Theme-specific cards
+        .status-card [mat-card-avatar] {
+          background-color: #e3f2fd;
+          mat-icon { color: #2196f3; }
+        }
+        
+        .priority-card [mat-card-avatar] {
+          background-color: #fff8e1;
+          mat-icon { color: #ffc107; }
+        }
+        
+        .trend-card [mat-card-avatar] {
+          background-color: #e8f5e9;
+          mat-icon { color: #4caf50; }
+        }
+        
+        .response-card [mat-card-avatar] {
+          background-color: #fce4ec;
+          mat-icon { color: #e91e63; }
+        }
+        
+        .metrics-card [mat-card-avatar] {
+          background-color: #ede7f6;
+          mat-icon { color: #673ab7; }
+        }
+        
+        .activity-card [mat-card-avatar] {
+          background-color: #e0f7fa;
+          mat-icon { color: #00bcd4; }
+        }
+      }
+    }
+  }
+  
+  // Print styles
+  @media print {
+    .reports-container {
+      padding: 0;
+    }
+    
+    .reports-header .actions-section,
+    .filters-section,
+    .mat-tab-header {
+      display: none !important;
+    }
+    
+    .mat-tab-body-content {
+      height: auto !important;
+      overflow: visible !important;
+    }
+    
+    .report-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 30px;
+    }
+  }

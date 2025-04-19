@@ -1,0 +1,42 @@
+<div class="chart-container">
+    <div *ngIf="isLoading" class="loading-overlay">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading status data...</p>
+    </div>
+    
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+    </div>
+    
+    <div *ngIf="!isLoading && !error" class="chart-wrapper">
+      <canvas baseChart
+        [data]="pieChartData"
+        [options]="pieChartOptions"
+        [type]="'pie'">
+      </canvas>
+    </div>
+    
+    <div class="status-legend">
+      <div class="legend-item">
+        <div class="color-indicator open"></div>
+        <div class="status-name">Open</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-indicator in-progress"></div>
+        <div class="status-name">In Progress</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-indicator resolved"></div>
+        <div class="status-name">Resolved</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-indicator closed"></div>
+        <div class="status-name">Closed</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-indicator reopened"></div>
+        <div class="status-name">Reopened</div>
+      </div>
+    </div>
+  </div>

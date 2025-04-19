@@ -1,0 +1,170 @@
+<div class="reports-container">
+    <header class="reports-header">
+      <div class="title-section">
+        <h1>Analytics Dashboard</h1>
+        <p class="subtitle">Comprehensive ticket system analytics and performance metrics</p>
+      </div>
+      
+      <div class="actions-section">
+        <button mat-raised-button color="primary" [matMenuTriggerFor]="exportMenu">
+          <mat-icon>file_download</mat-icon>
+          Export Reports
+        </button>
+        <mat-menu #exportMenu="matMenu">
+          <button mat-menu-item (click)="exportReports('pdf')">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Export as PDF
+          </button>
+          <button mat-menu-item (click)="exportReports('excel')">
+            <mat-icon>table_chart</mat-icon>
+            Export as Excel
+          </button>
+          <button mat-menu-item (click)="exportReports('csv')">
+            <mat-icon>format_list_numbered</mat-icon>
+            Export as CSV
+          </button>
+        </mat-menu>
+        
+        <button mat-stroked-button color="primary" (click)="printReports()">
+          <mat-icon>print</mat-icon>
+          Print
+        </button>
+      </div>
+    </header>
+  
+    <section class="filters-section">
+      <mat-card>
+        <mat-card-content>
+          <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+            <div class="filter-controls">
+              <mat-form-field appearance="outline">
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline">
+                <mat-label>Support Agent</mat-label>
+                <mat-select formControlName="supportAgent">
+                  <mat-option value="all">All Support Agents</mat-option>
+                  <mat-option value="1">John Doe</mat-option>
+                  <mat-option value="2">Jane Smith</mat-option>
+                  <mat-option value="3">Mike Johnson</mat-option>
+                </mat-select>
+              </mat-form-field>
+  
+              <button mat-raised-button color="accent" type="submit">
+                <mat-icon>filter_list</mat-icon>
+                Apply Filters
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </section>
+  
+    <div class="reports-content">
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="300ms">
+        <mat-tab label="Overview">
+          <div class="tab-content">
+            <div class="report-grid">
+              <!-- Status Distribution -->
+              <mat-card class="report-card status-card">
+                <mat-card-header>
+                  <div mat-card-avatar>
+                    <mat-icon>pie_chart</mat-icon>
+                  </div>
+                  <mat-card-title>Ticket Status Distribution</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <app-status-distribution [dateRange]="filterForm.value"></app-status-distribution>
+                </mat-card-content>
+              </mat-card>
+  
+              <!-- Priority Analysis -->
+              <mat-card class="report-card priority-card">
+                <mat-card-header>
+                  <div mat-card-avatar>
+                    <mat-icon>bar_chart</mat-icon>
+                  </div>
+                  <mat-card-title>Priority Analysis</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <app-priority-analysis [dateRange]="filterForm.value"></app-priority-analysis>
+                </mat-card-content>
+              </mat-card>
+  
+              <!-- Ticket Trends -->
+              <mat-card class="report-card trend-card full-width">
+                <mat-card-header>
+                  <div mat-card-avatar>
+                    <mat-icon>trending_up</mat-icon>
+                  </div>
+                  <mat-card-title>Ticket Volume Trends</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <app-ticket-trends [dateRange]="filterForm.value"></app-ticket-trends>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+  
+        <mat-tab label="Performance">
+          <div class="tab-content">
+            <div class="report-grid">
+              <!-- Response Time -->
+              <mat-card class="report-card response-card">
+                <mat-card-header>
+                  <div mat-card-avatar>
+                    <mat-icon>speed</mat-icon>
+                  </div>
+                  <mat-card-title>Response Time Analysis</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <app-response-time [dateRange]="filterForm.value"></app-response-time>
+                </mat-card-content>
+              </mat-card>
+  
+              <!-- Performance Metrics -->
+              <mat-card class="report-card metrics-card">
+                <mat-card-header>
+                  <div mat-card-avatar>
+                    <mat-icon>assessment</mat-icon>
+                  </div>
+                  <mat-card-title>Support Performance Metrics</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <app-performance-metrics 
+                    [dateRange]="filterForm.value" 
+                    [supportAgent]="filterForm.get('supportAgent')?.value">
+                  </app-performance-metrics>
+                </mat-card-content>
+              </mat-card>
+  
+              <!-- User Activity -->
+              <mat-card class="report-card activity-card full-width">
+                <mat-card-header>
+                  <div mat-card-avatar>
+                    <mat-icon>people</mat-icon>
+                  </div>
+                  <mat-card-title>User Activity Analysis</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <app-user-activity [dateRange]="filterForm.value"></app-user-activity>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>

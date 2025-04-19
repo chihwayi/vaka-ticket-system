@@ -1,0 +1,98 @@
+.chart-container {
+  position: relative;
+  min-height: 300px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 10;
+    
+    p {
+      margin-top: 16px;
+      color: #666;
+    }
+  }
+  
+  .error-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 200px;
+    text-align: center;
+    
+    mat-icon {
+      color: #f44336;
+      font-size: 40px;
+      height: 40px;
+      width: 40px;
+      margin-bottom: 16px;
+    }
+    
+    p {
+      color: #666;
+    }
+  }
+  
+  .chart-wrapper {
+    height: 250px;
+    position: relative;
+  }
+  
+  .status-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      
+      .color-indicator {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        margin-right: 8px;
+        
+        &.open {
+          background-color: #f44336;
+        }
+        
+        &.in-progress {
+          background-color: #ff9800;
+        }
+        
+        &.resolved {
+          background-color: #4caf50;
+        }
+        
+        &.closed {
+          background-color: #2196f3;
+        }
+        
+        &.reopened {
+          background-color: #9c27b0;
+        }
+      }
+      
+      .status-name {
+        font-size: 14px;
+        color: #333;
+      }
+    }
+  }
+}

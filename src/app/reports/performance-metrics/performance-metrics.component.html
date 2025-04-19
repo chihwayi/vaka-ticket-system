@@ -1,0 +1,74 @@
+<div class="chart-container performance-chart">
+    <div *ngIf="isLoading" class="loading-overlay">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading performance data...</p>
+    </div>
+  
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+    </div>
+  
+    <div *ngIf="!isLoading && !error" class="performance-content">
+      <div class="chart-wrapper">
+        <canvas baseChart
+          [data]="radarChartData"
+          [options]="radarChartOptions"
+          [type]="'radar'">
+        </canvas>
+      </div>
+  
+      <div class="performance-stats">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <mat-icon>assignment</mat-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ performanceStats.ticketsAssigned }}</div>
+            <div class="stat-label">Tickets Assigned</div>
+          </div>
+        </div>
+  
+        <div class="stat-card">
+          <div class="stat-icon">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ performanceStats.ticketsResolved }}</div>
+            <div class="stat-label">Tickets Resolved</div>
+          </div>
+        </div>
+  
+        <div class="stat-card">
+          <div class="stat-icon">
+            <mat-icon>timelapse</mat-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ performanceStats.averageResolutionTime }}</div>
+            <div class="stat-label">Average Resolution Time</div>
+          </div>
+        </div>
+  
+        <div class="stat-card">
+          <div class="stat-icon">
+            <mat-icon>thumb_up</mat-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ performanceStats.customerSatisfaction }}</div>
+            <div class="stat-label">Customer Satisfaction</div>
+          </div>
+        </div>
+  
+        <div class="stat-card">
+          <div class="stat-icon">
+            <mat-icon>speed</mat-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ performanceStats.responseRate }}</div>
+            <div class="stat-label">Response Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

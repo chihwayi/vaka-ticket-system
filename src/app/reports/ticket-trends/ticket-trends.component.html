@@ -1,0 +1,34 @@
+<div class="chart-container">
+    <div *ngIf="isLoading" class="loading-overlay">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading trends data...</p>
+    </div>
+    
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+    </div>
+    
+    <div *ngIf="!isLoading && !error" class="chart-wrapper">
+      <canvas baseChart
+        [data]="lineChartData"
+        [options]="lineChartOptions"
+        [type]="'line'">
+      </canvas>
+    </div>
+    
+    <div class="chart-summary">
+      <div class="summary-item created">
+        <div class="summary-value">+14%</div>
+        <div class="summary-label">Ticket Creation</div>
+      </div>
+      <div class="summary-item resolved">
+        <div class="summary-value">+22%</div>
+        <div class="summary-label">Resolution Rate</div>
+      </div>
+      <div class="summary-item average">
+        <div class="summary-value">1.8 days</div>
+        <div class="summary-label">Avg Resolution Time</div>
+      </div>
+    </div>
+  </div>

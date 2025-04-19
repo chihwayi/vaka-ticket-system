@@ -1,0 +1,38 @@
+<div class="chart-container">
+    <div *ngIf="isLoading" class="loading-overlay">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading priority data...</p>
+    </div>
+    
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+    </div>
+    
+    <div *ngIf="!isLoading && !error" class="chart-wrapper">
+      <canvas baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [type]="'bar'">
+      </canvas>
+    </div>
+    
+    <div class="priority-legend">
+      <div class="legend-item">
+        <div class="color-indicator critical"></div>
+        <div class="priority-name">Critical</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-indicator high"></div>
+        <div class="priority-name">High</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-indicator medium"></div>
+        <div class="priority-name">Medium</div>
+      </div>
+      <div class="legend-item">
+        <div class="color-indicator low"></div>
+        <div class="priority-name">Low</div>
+      </div>
+    </div>
+  </div>

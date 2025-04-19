@@ -1,0 +1,74 @@
+<div class="table-container">
+    <div class="filter-field">
+      <mat-form-field appearance="outline">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Search by name or username...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading user activity data...</p>
+    </div>
+    
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+    </div>
+    
+    <div *ngIf="!isLoading && !error" class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2">
+        <!-- Username Column -->
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Username </th>
+          <td mat-cell *matCellDef="let user"> {{ user.username }} </td>
+        </ng-container>
+        
+        <!-- Full Name Column -->
+        <ng-container matColumnDef="fullName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Full Name </th>
+          <td mat-cell *matCellDef="let user"> {{ user.fullName }} </td>
+        </ng-container>
+        
+        <!-- Tickets Created Column -->
+        <ng-container matColumnDef="ticketsCreated">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Tickets Created </th>
+          <td mat-cell *matCellDef="let user"> {{ user.ticketsCreated }} </td>
+        </ng-container>
+        
+        <!-- Tickets Resolved Column -->
+        <ng-container matColumnDef="ticketsResolved">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Tickets Resolved </th>
+          <td mat-cell *matCellDef="let user"> {{ user.ticketsResolved }} </td>
+        </ng-container>
+        
+        <!-- Comments Added Column -->
+        <ng-container matColumnDef="commentsAdded">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Comments Added </th>
+          <td mat-cell *matCellDef="let user"> {{ user.commentsAdded }} </td>
+        </ng-container>
+        
+        <!-- Last Active Column -->
+        <ng-container matColumnDef="lastActive">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Active </th>
+          <td mat-cell *matCellDef="let user"> {{ user.lastActive | date:'medium' }} </td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        
+        <!-- Row shown when there is no matching data -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="6">No data matching the filter</td>
+        </tr>
+      </table>
+      
+      <mat-paginator 
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        [pageSize]="10"
+        showFirstLastButtons
+        aria-label="Select page of users">
+      </mat-paginator>
+    </div>
+  </div>
