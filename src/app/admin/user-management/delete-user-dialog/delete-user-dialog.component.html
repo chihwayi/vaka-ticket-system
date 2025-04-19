@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Delete User</h2>
+
+<mat-dialog-content>
+  <p>Are you sure you want to delete the user <strong>{{ data.username }}</strong>?</p>
+  <p class="warning">This action cannot be undone.</p>
+  
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button [disabled]="loading" (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="warn" [disabled]="loading" (click)="confirmDelete()">
+    <mat-spinner *ngIf="loading" diameter="20" class="spinner-button"></mat-spinner>
+    <span *ngIf="!loading">Delete</span>
+  </button>
+</mat-dialog-actions>

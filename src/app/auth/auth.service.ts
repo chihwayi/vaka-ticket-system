@@ -6,6 +6,7 @@ import { AuthResponse, AuthRequest } from '../models/auth-response.model';
 import { User } from '../models/user.model';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { Role } from '../models/role.model';
 
 @Injectable({
   providedIn: 'root',
@@ -72,7 +73,7 @@ export class AuthService {
       id: authResult.id,
       username: authResult.username,
       email: authResult.email,
-      roles: authResult.roles,
+      roles: authResult.roles.map(role => role as unknown as Role),
     };
 
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
@@ -117,17 +118,17 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  hasRole(role: string): boolean {
+  hasRole(role: Role): boolean {
     const user = this.getCurrentUser();
     return user?.roles?.includes(role) || false;
   }
 
   isAdmin(): boolean {
-    return this.hasRole('ROLE_ADMIN');
+    return this.hasRole('ROLE_ADMIN' as unknown as Role);
   }
 
   isSupport(): boolean {
-    return this.hasRole('ROLE_SUPPORT');
+    return this.hasRole('ROLE_SUPPORT' as unknown as Role);
   }
 
   refreshToken() {

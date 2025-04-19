@@ -10,6 +10,7 @@ import { User } from '../../models/user.model';
 import { TicketService } from '../ticket.service';
 import { AuthService } from '../../auth/auth.service';
 import { UserService } from '../../auth/user.service';
+import { Role } from '../../models/role.model';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -189,7 +190,7 @@ export class TicketDetailComponent implements OnInit {
 
   get canAssign(): boolean {
     return (
-      this.authService.isAdmin() || this.authService.hasRole('ROLE_SUPPORT')
+      this.authService.isAdmin() || this.authService.hasRole('ROLE_SUPPORT' as unknown as Role)
     );
   }
 
