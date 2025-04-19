@@ -118,17 +118,25 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  hasRole(role: Role): boolean {
-    const user = this.getCurrentUser();
-    return user?.roles?.includes(role) || false;
-  }
+  hasRole(role: Role): boolean {  
+    const user = this.getCurrentUser();  
+    return user?.roles?.some(r => 
+        (typeof r === 'string' ? r === role.name : r.name === role.name)
+    ) || false;  
+}
 
-  isAdmin(): boolean {
-    return this.hasRole('ROLE_ADMIN' as unknown as Role);
-  }
+isAdmin(): boolean {
+  const adminRole: Role = { id: 0, name: 'ROLE_ADMIN' }; // Replace `id` with the appropriate identifier if needed.
+  return this.hasRole(adminRole);
+}
 
-  isSupport(): boolean {
-    return this.hasRole('ROLE_SUPPORT' as unknown as Role);
+isSupport(): boolean {
+  const supportRole: Role = { id: 0, name: 'ROLE_SUPPORT' }; // Replace `id` with the appropriate identifier if needed.
+  return this.hasRole(supportRole);
+}
+  isUser(): boolean {
+    const userRole: Role = { id: 0, name: 'ROLE_USER' }; // Replace `id` with the appropriate identifier if needed.
+    return this.hasRole(userRole);
   }
 
   refreshToken() {

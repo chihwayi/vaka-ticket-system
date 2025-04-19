@@ -10,6 +10,7 @@ import { UserFormDialogComponent } from './user-form-dialog/user-form-dialog.com
 import { ResetPasswordDialogComponent } from './reset-password-dialog/reset-password-dialog.component';
 import { DeleteUserDialogComponent } from './delete-user-dialog/delete-user-dialog.component';
 import { finalize } from 'rxjs/operators';
+import { Role } from '../../models/role.model';
 
 @Component({
   selector: 'app-user-management',
@@ -123,6 +124,19 @@ export class UserManagementComponent implements OnInit {
   }
 
   getRoleString(user: User): string {
-    return user.roles.map(role => role.name).join(', ');
+    if (!user.roles || user.roles.length === 0) {
+      return '';
+    }
+    
+    // Check if roles is an array of strings or Role objects
+    const firstRole = user.roles[0];
+    
+    // If it's a string array
+    if (typeof firstRole === 'string') {
+      return (user.roles as string[]).join(', ');
+    }
+    
+    // If it's a Role object array  
+    return (user.roles as Role[]).map(role => role.name).join(', ');
   }
 }

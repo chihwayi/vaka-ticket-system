@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { User } from '../../../models/user.model';
 import { UserManagementService } from '../user-management.service';
 import { Role } from '../../../models/role.model';
-
+import { RoleService } from '../role.service';
 
 interface DialogData {
   user: User | null;
@@ -21,11 +21,13 @@ export class UserFormDialogComponent implements OnInit {
   userForm!: FormGroup;
   availableRoles: Role[] = [];
   loading = false;
+  loadingRoles = false;
   error: string | null = null;
   
   constructor(
     private fb: FormBuilder,
     private userService: UserManagementService,
+    private roleService: RoleService,
     public dialogRef: MatDialogRef<UserFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) { }
@@ -54,6 +56,9 @@ export class UserFormDialogComponent implements OnInit {
       this.userForm.addControl('confirmPassword', this.fb.control('', [
         Validators.required
       ]));
+      
+      // Fixed: Use the passwordMatchValidator as a ValidatorFn
+      this.userForm.addValidators(this.passwordMatchValidator());
     }
     
     // Make username field readonly in edit mode
@@ -62,12 +67,43 @@ export class UserFormDialogComponent implements OnInit {
     }
   }
 
+  // Fixed: Changed to return a ValidatorFn
+  passwordMatchValidator(): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      const formGroup = control as FormGroup;
+      const password = formGroup.get('password')?.value;
+      const confirmPassword = formGroup.get('confirmPassword')?.value;
+      
+      if (password && confirmPassword && password !== confirmPassword) {
+        formGroup.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+        return { passwordMismatch: true };
+      }
+      
+      return null;
+    };
+  }
+
   loadRoles(): void {
-    this.userService.getAllRoles().subscribe({
+    this.loadingRoles = true;
+    this.roleService.getAllRoles().subscribe({
       next: (roles) => {
         this.availableRoles = roles;
+        this.loadingRoles = false;
+        
+        // If in edit mode, we need to match the existing user roles with the available roles
+        if (this.data.mode === 'edit' && this.data.user?.roles) {
+          // Fixed: Corrected the type issue by properly casting roles
+          const userRoleNames = this.data.user.roles as string[];
+          const selectedRoles = userRoleNames.map(roleName => {
+            // Find the role object that matches the name
+            return this.availableRoles.find(role => role.name === roleName);
+          }).filter(role => role !== undefined) as Role[];
+          
+          this.userForm.get('roles')?.setValue(selectedRoles);
+        }
       },
       error: (error) => {
+        this.loadingRoles = false;
         console.error('Error loading roles:', error);
         this.error = 'Failed to load user roles. Please try again.';
       }
@@ -92,15 +128,18 @@ export class UserFormDialogComponent implements OnInit {
   }
 
   private createUser(formValue: any): void {
+    // Extract role names for API
+    const roleNames = formValue.roles.map((role: Role) => role.name);
+    
     const user = {
       username: formValue.username,
       fullName: formValue.fullName,
       email: formValue.email,
       password: formValue.password,
-      roles: formValue.roles
+      roles: roleNames
     };
 
-    this.userService.createUser(user as User).subscribe({
+    this.userService.createUser(user).subscribe({
       next: () => {
         this.loading = false;
         this.dialogRef.close(true);
@@ -109,8 +148,10 @@ export class UserFormDialogComponent implements OnInit {
         this.loading = false;
         console.error('Error creating user:', error);
         
-        if (error.status === 409) {
-          this.error = 'Username or email already exists.';
+        if (error.status === 400 && error.error?.message?.includes('Username is already taken')) {
+          this.error = 'Username is already taken. Please choose another.';
+        } else if (error.status === 400 && error.error?.message?.includes('Email is already in use')) {
+          this.error = 'Email is already in use. Please use another email.';
         } else {
           this.error = 'Failed to create user. Please try again.';
         }
@@ -126,15 +167,17 @@ export class UserFormDialogComponent implements OnInit {
       return;
     }
 
+    // Extract role names for API
+    const roleNames = formValue.roles.map((role: Role) => role.name);
+    
     const user = {
-      id: userId,
       username: formValue.username,
       fullName: formValue.fullName,
       email: formValue.email,
-      roles: formValue.roles
+      roles: roleNames
     };
 
-    this.userService.updateUser(userId, user as User).subscribe({
+    this.userService.updateUser(userId, user).subscribe({
       next: () => {
         this.loading = false;
         this.dialogRef.close(true);
@@ -142,7 +185,14 @@ export class UserFormDialogComponent implements OnInit {
       error: (error) => {
         this.loading = false;
         console.error('Error updating user:', error);
-        this.error = 'Failed to update user. Please try again.';
+        
+        if (error.status === 400 && error.error?.message?.includes('Username is already taken')) {
+          this.error = 'Username is already taken. Please choose another.';
+        } else if (error.status === 400 && error.error?.message?.includes('Email is already in use')) {
+          this.error = 'Email is already in use. Please use another email.';
+        } else {
+          this.error = 'Failed to update user. Please try again.';
+        }
       }
     });
   }

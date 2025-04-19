@@ -9,12 +9,12 @@ import { Role } from '../../models/role.model';
   providedIn: 'root'
 })
 export class UserManagementService {
-  private baseUrl = `${environment.apiUrl}/api/auth`;
+  private baseUrl = `${environment.apiUrl}/api/users`;
 
   constructor(private http: HttpClient) { }
 
   getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.baseUrl}/users`);
+    return this.http.get<User[]>(this.baseUrl);
   }
 
   getUserById(id: number): Observable<User> {
@@ -42,6 +42,20 @@ export class UserManagementService {
   }
 
   getAllRoles(): Observable<Role[]> {
-    return this.http.get<Role[]>(`${environment.apiUrl}/roles`);
+    return this.http.get<Role[]>(`${this.baseUrl}/roles`);
+  }
+
+  /**
+   * Add role to user
+   */
+  addUserRole(userId: number, roleId: number): Observable<User> {
+    return this.http.put<User>(`${this.baseUrl}/${userId}/roles/${roleId}`, {});
+  }
+
+  /**
+   * Remove role from user
+   */
+  removeUserRole(userId: number, roleId: number): Observable<User> {
+    return this.http.delete<User>(`${this.baseUrl}/${userId}/roles/${roleId}`);
   }
 }
