@@ -4,7 +4,8 @@ export interface Comment {
     id?: number;
     content: string;
     ticketId: number;
-    createdBy?: User;
-    createdAt?: Date;
-    updatedAt?: Date;
+    author?: User;
+    createdDate?: Date;
+    updatedDate?: Date;
+    authorName?: string;
   }

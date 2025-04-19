@@ -8,6 +8,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { AuthErrorInterceptor } from './core/interceptors/auth-error.interceptor';
+import { TicketsModule } from './tickets/tickets.module';
 
 @NgModule({
   declarations: [
@@ -19,10 +21,12 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
     BrowserAnimationsModule,
     HttpClientModule,
     CoreModule,
-    MatSidenavModule
+    MatSidenavModule,
+    TicketsModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

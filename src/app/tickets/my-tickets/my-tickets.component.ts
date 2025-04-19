@@ -44,6 +44,7 @@ export class MyTicketsComponent implements OnInit {
           this.dataSource.data = response.content;
           this.totalElements = response.totalElements;
           this.loading = false;
+          console.log('My tickets loaded successfully', response);
         },
         error: (error) => {
           this.snackBar.open('Failed to load your tickets', 'Close', { duration: 5000 });
@@ -109,8 +110,8 @@ export class MyTicketsComponent implements OnInit {
         return 'priority-medium';
       case TicketPriority.HIGH:
         return 'priority-high';
-      case TicketPriority.URGENT:
-        return 'priority-urgent';
+      case TicketPriority.CRITICAL:
+        return 'priority-critical';
       default:
         return '';
     }

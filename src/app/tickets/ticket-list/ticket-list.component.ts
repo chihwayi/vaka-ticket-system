@@ -107,8 +107,8 @@ export class TicketListComponent implements OnInit {
         return 'priority-medium';
       case TicketPriority.HIGH:
         return 'priority-high';
-      case TicketPriority.URGENT:
-        return 'priority-urgent';
+      case TicketPriority.CRITICAL:
+        return 'priority-critical';
       default:
         return '';
     }

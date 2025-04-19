@@ -93,7 +93,7 @@ export class CommentListComponent implements OnInit {
 
   canModifyComment(comment: Comment): boolean {
     const currentUser = this.authService.getCurrentUser();
-    return !!currentUser && !!(currentUser.id === comment.createdBy?.id || !!(this.authService.isAdmin()));
+    return !!currentUser && !!(currentUser.id === comment.author?.id || !!(this.authService.isAdmin()));
   }
 
   getTimeAgo(date: Date | undefined): string {

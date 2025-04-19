@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     });
 
     // Get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
     
     // If already logged in, redirect to home
     if (this.authService.isLoggedIn()) {

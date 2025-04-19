@@ -8,21 +8,37 @@ import { AssignedTicketsComponent } from './assigned-tickets/assigned-tickets.co
 import { AuthGuard } from '../core/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: TicketListComponent },
-  { path: 'new', component: TicketFormComponent },
-  { path: 'edit/:id', component: TicketFormComponent },
-  { path: ':id', component: TicketDetailComponent },
-  { path: 'my-tickets', component: MyTicketsComponent },
   { 
-    path: 'assigned', 
+    path: '', 
+    component: TicketListComponent,
+    canActivate: [AuthGuard] 
+  },
+  {
+    path: 'new',
+    component: TicketFormComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'my-tickets',
+    component: MyTicketsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'assigned',
     component: AssignedTicketsComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPPORT'] }
-  }
+    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPPORT'] },
+  },
+  {
+    path: 'edit/:id',
+    component: TicketFormComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: ':id', component: TicketDetailComponent }, 
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class TicketsRoutingModule { }
+export class TicketsRoutingModule {}

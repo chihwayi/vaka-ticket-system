@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Ticket, TicketStatus, TicketPriority } from '../models/ticket.model';
 import { environment } from '../../environments/environment';
+import { AuthService } from '../auth/auth.service';
+import { Router } from '@angular/router';
 
 export interface PagedResponse<T> {
   content: T[];
@@ -18,7 +20,11 @@ export interface PagedResponse<T> {
 export class TicketService {
   private readonly API_URL = `${environment.apiUrl}/api/tickets`;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient, 
+    private authService: AuthService, 
+    private router: Router
+  ) { }
 
   getAllTickets(page = 0, size = 10): Observable<PagedResponse<Ticket>> {
     const params = new HttpParams()
@@ -29,11 +35,27 @@ export class TicketService {
   }
 
   getTicketById(id: number): Observable<Ticket> {
-    return this.http.get<Ticket>(`${this.API_URL}/${id}`);
+    return this.http.get<Ticket>(`${this.API_URL}/${id}`).pipe(
+      tap(ticket => console.log(`Retrieved ticket ${id}:`, ticket)),
+      catchError(error => {
+        console.error(`Error retrieving ticket ${id}:`, error);
+        return throwError(() => error);
+      })
+    );
   }
 
   createTicket(ticket: Partial<Ticket>): Observable<Ticket> {
-    return this.http.post<Ticket>(this.API_URL, ticket);
+    console.log('Creating ticket with token present:', !!this.authService.getToken());
+    return this.http.post<Ticket>(this.API_URL, ticket).pipe(
+      catchError(error => {
+        console.error('HTTP Error in createTicket:', error);
+        if (error.status === 401) {
+          console.log('Authentication failed, redirecting to login');
+          this.router.navigate(['/']);
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
   updateTicket(id: number, ticket: Partial<Ticket>): Observable<Ticket> {

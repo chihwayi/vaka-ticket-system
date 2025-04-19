@@ -8,12 +8,12 @@ import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
-  
+
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'current_user';
   private readonly API_URL = `${environment.apiUrl}/api/auth`;
@@ -30,41 +30,51 @@ export class AuthService {
   }
 
   login(credentials: AuthRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials)
+    return this.http
+      .post<AuthResponse>(`${this.API_URL}/login`, credentials)
       .pipe(
-        tap(response => this.setSession(response)),
-        catchError(error => {
+        tap((response) => this.setSession(response)),
+        catchError((error) => {
           console.error('Login error', error);
-          return throwError(() => new Error(error.error?.message || 'Login failed. Please try again.'));
+          return throwError(
+            () =>
+              new Error(
+                error.error?.message || 'Login failed. Please try again.'
+              )
+          );
         })
       );
   }
 
   register(registerData: {
-    username: string,
-    email: string,
-    fullName: string,
-    password: string
+    username: string;
+    email: string;
+    fullName: string;
+    password: string;
   }): Observable<any> {
-    return this.http.post<any>(`${this.API_URL}/register`, registerData)
-      .pipe(
-        catchError(error => {
-          console.error('Registration error', error);
-          return throwError(() => new Error(error.error?.message || 'Registration failed. Please try again.'));
-        })
-      );
+    return this.http.post<any>(`${this.API_URL}/register`, registerData).pipe(
+      catchError((error) => {
+        console.error('Registration error', error);
+        return throwError(
+          () =>
+            new Error(
+              error.error?.message || 'Registration failed. Please try again.'
+            )
+        );
+      })
+    );
   }
 
   private setSession(authResult: AuthResponse): void {
     localStorage.setItem(this.TOKEN_KEY, authResult.token);
-    
+
     const user: User = {
       id: authResult.id,
       username: authResult.username,
       email: authResult.email,
-      roles: authResult.roles
+      roles: authResult.roles,
     };
-    
+
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
@@ -73,15 +83,34 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this.currentUserSubject.next(null);
-    this.router.navigate(['/']);
+    // Always navigate to the login page on logout
+    this.router.navigate(['/auth/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    console.log('Token retrieved:', !!token);
+    return token;
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    if (!token) return false;
+    
+    // Check if token is expired (if you have JWT structure)
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expiry = payload.exp;
+      const isExpired = expiry * 1000 < Date.now();
+      
+      console.log('Token expiry:', new Date(expiry * 1000));
+      console.log('Is token expired:', isExpired);
+      
+      return !isExpired;
+    } catch (e) {
+      console.error('Error parsing token:', e);
+      return true; // Continue with request if token parsing fails
+    }
   }
 
   getCurrentUser(): User | null {
@@ -99,5 +128,20 @@ export class AuthService {
 
   isSupport(): boolean {
     return this.hasRole('ROLE_SUPPORT');
+  }
+
+  refreshToken() {
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (!refreshToken) return throwError(() => new Error('No refresh token'));
+    
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/refresh`, { refreshToken })
+      .pipe(
+        tap(response => {
+          localStorage.setItem('auth_token', response.token);
+          if (response.refreshToken) {
+            localStorage.setItem('refresh_token', response.refreshToken);
+          }
+        })
+      );
   }
 }

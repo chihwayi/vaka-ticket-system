@@ -8,8 +8,10 @@ export interface Ticket {
     priority: TicketPriority;
     creator?: User;
     assignedTo?: User;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdDate?: Date;
+    updatedDate?: Date;
+    assignedToName: string;
+    creatorName: string;
   }
   
   export enum TicketStatus {
@@ -23,5 +25,5 @@ export interface Ticket {
     LOW = 'LOW',
     MEDIUM = 'MEDIUM',
     HIGH = 'HIGH',
-    URGENT = 'URGENT'
+    CRITICAL = 'CRITICAL'  
   }

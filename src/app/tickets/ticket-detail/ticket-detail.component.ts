@@ -52,6 +52,7 @@ export class TicketDetailComponent implements OnInit {
         this.ticket = ticket;
         this.selectedAssigneeId = ticket.assignedTo?.id || null;
         this.loading = false;
+        console.log('Ticket loaded successfully', ticket);
       },
       error: (error) => {
         this.snackBar.open('Failed to load ticket details', 'Close', {
@@ -76,11 +77,6 @@ export class TicketDetailComponent implements OnInit {
         this.snackBar.open('Failed to load users', 'Close', { duration: 5000 });
       },
     });
-    /*
-    this.users = [
-      { id: 1, username: 'admin', email: 'admin@example.com', fullName: 'System Administrator', roles: ['ROLE_ADMIN'] },
-      { id: 2, username: 'support', email: 'support@example.com', fullName: 'Support User', roles: ['ROLE_SUPPORT'] }
-    ]; */
   }
 
   editTicket(): void {
@@ -169,15 +165,14 @@ export class TicketDetailComponent implements OnInit {
         return 'priority-medium';
       case TicketPriority.HIGH:
         return 'priority-high';
-      case TicketPriority.URGENT:
-        return 'priority-urgent';
+      case TicketPriority.CRITICAL:
+        return 'priority-critical';
       default:
         return '';
     }
   }
 
   onCommentAdded(): void {
-    // Refresh ticket data after comment is added
     this.loadTicket();
   }
 

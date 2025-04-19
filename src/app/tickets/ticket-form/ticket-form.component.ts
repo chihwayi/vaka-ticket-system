@@ -8,6 +8,7 @@ import {
   TicketStatus,
 } from '../../models/ticket.model';
 import { TicketService } from '../ticket.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-ticket-form',
@@ -28,12 +29,17 @@ export class TicketFormComponent implements OnInit {
     private ticketService: TicketService,
     private router: Router,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-
+    
+    // Debug authentication
+    console.log('Is logged in:', this.authService.isLoggedIn());
+    console.log('Token:', this.authService.getToken()?.substring(0, 10) + '...');
+    
     // Check if we're in edit mode
     this.route.params.subscribe((params) => {
       if (params['id']) {
@@ -102,6 +108,9 @@ export class TicketFormComponent implements OnInit {
   }
 
   createTicket(ticketData: Partial<Ticket>): void {
+    console.log('Sending ticket creation request');
+    console.log('Auth token present:', !!this.authService.getToken());
+
     this.ticketService.createTicket(ticketData).subscribe({
       next: (newTicket) => {
         this.snackBar.open('Ticket created successfully', 'Close', {
@@ -110,11 +119,22 @@ export class TicketFormComponent implements OnInit {
         this.router.navigate(['/tickets', newTicket.id]);
       },
       error: (error) => {
-        this.snackBar.open('Failed to create ticket', 'Close', {
-          duration: 5000,
-        });
+        console.error('Full error creating ticket:', error);
+        if (error.status === 401) {
+          this.snackBar.open(
+            'Authentication error. Please log in again',
+            'Close',
+            {
+              duration: 5000,
+            }
+          );
+          this.router.navigate(['/login']);
+        } else {
+          this.snackBar.open('Failed to create ticket', 'Close', {
+            duration: 5000,
+          });
+        }
         this.loading = false;
-        console.error('Error creating ticket', error);
       },
     });
   }

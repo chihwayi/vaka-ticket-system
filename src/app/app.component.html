@@ -1,8 +1,8 @@
 <div class="app-container">
-  <app-header (toggleSidebar)="toggleSidebar()"></app-header>
+  <app-header *ngIf="showHeaderFooter" (toggleSidebar)="toggleSidebar()"></app-header>
 
-  <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav mode="side" [opened]="isLoggedIn && sidebarOpen" class="sidenav">
+  <mat-sidenav-container class="sidenav-container" [ngClass]="{'auth-container': !showHeaderFooter}">
+    <mat-sidenav mode="side" [opened]="isLoggedIn && sidebarOpen && showHeaderFooter" class="sidenav">
       <app-sidebar></app-sidebar>
     </mat-sidenav>
     
@@ -11,7 +11,7 @@
         <router-outlet></router-outlet>
       </div>
       
-      <app-footer></app-footer>
+      <app-footer *ngIf="showHeaderFooter"></app-footer>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

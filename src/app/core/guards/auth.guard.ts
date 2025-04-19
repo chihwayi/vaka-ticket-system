@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
         );
         
         if (!hasRequiredRole) {
-          this.router.navigate(['/']);
+          this.router.navigate(['/auth/login']);
           return false;
         }
       }
@@ -24,7 +24,9 @@ export class AuthGuard implements CanActivate {
       return true;
     }
     
-    this.router.navigate(['/'], { queryParams: { returnUrl: state.url } });
+    this.router.navigate(['/auth/login'], { 
+      queryParams: { returnUrl: state.url }
+    });
     return false;
   }
 }

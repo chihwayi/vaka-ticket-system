@@ -19,7 +19,7 @@
             </div>
           </mat-card-title>
           <mat-card-subtitle>
-            Created {{ ticket.createdAt | date:'medium' }} by {{ ticket.creator?.fullName || ticket.creator?.username }}
+            Created {{ ticket.createdDate | date:'medium' }} by {{ ticket.creatorName  }}
           </mat-card-subtitle>
         </mat-card-header>
   
@@ -39,10 +39,10 @@
             </div>
             <div class="meta-item">
               <span class="meta-label">Assigned to:</span>
-              <span *ngIf="ticket.assignedTo">
-                {{ ticket.assignedTo.fullName || ticket.assignedTo.username }}
+              <span *ngIf="ticket">
+                {{ ticket.assignedToName}}
               </span>
-              <span *ngIf="!ticket.assignedTo" class="unassigned">Unassigned</span>
+              <span *ngIf="!ticket.assignedToName" class="unassigned">Unassigned</span>
             </div>
           </div>
   

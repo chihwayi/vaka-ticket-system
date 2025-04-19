@@ -16,11 +16,11 @@
             <mat-icon>account_circle</mat-icon>
           </div>
           <mat-card-title>
-            {{ comment.createdBy?.fullName || comment.createdBy?.username || 'Unknown User' }}
+            {{ comment.authorName || 'Unknown User' }}
           </mat-card-title>
           <mat-card-subtitle>
-            {{ getTimeAgo(comment.createdAt) }}
-            <span *ngIf="comment.updatedAt !== comment.createdAt" class="edited-label">(edited)</span>
+            {{ comment.createdDate ? getTimeAgo(comment.createdDate) : 'Unknown time' }}
+            <span *ngIf="comment.updatedDate && comment.createdDate !== comment.updatedDate" class="edited-label">(edited)</span>
           </mat-card-subtitle>
         </mat-card-header>
         
