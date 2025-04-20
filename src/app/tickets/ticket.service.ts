@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import { Ticket, TicketStatus, TicketPriority } from '../models/ticket.model';
+import { Ticket, TicketStatus, TicketPriority, ContentType } from '../models/ticket.model';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
@@ -110,5 +110,57 @@ export class TicketService {
       .set('size', size.toString());
     
     return this.http.get<PagedResponse<Ticket>>(`${this.API_URL}/by-priority`, { params });
+  }
+
+  createTicketWithMedia(
+    title: string,
+    description: string,
+    priority: TicketPriority,
+    file: File | null,
+    contentType: ContentType
+  ): Observable<Ticket> {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('priority', priority);
+    formData.append('contentType', contentType);
+    
+    if (file) {
+      formData.append('file', file);
+    }
+
+    return this.http.post<Ticket>(`${this.API_URL}/with-media`, formData).pipe(
+      catchError(error => {
+        console.error('HTTP Error in createTicketWithMedia:', error);
+        if (error.status === 401) {
+          console.log('Authentication failed, redirecting to login');
+          this.router.navigate(['/']);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+  
+  getTicketsByContentType(contentType: ContentType, page = 0, size = 10): Observable<PagedResponse<Ticket>> {
+    const params = new HttpParams()
+      .set('contentType', contentType)
+      .set('page', page.toString())
+      .set('size', size.toString());
+    
+    return this.http.get<PagedResponse<Ticket>>(`${this.API_URL}/by-content-type`, { params });
+  }
+
+  updateTicketWithMedia(id: number, title: string, description: string, priority: TicketPriority, file: File | null, contentType: ContentType): Observable<Ticket> {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('priority', priority);
+    formData.append('contentType', contentType);
+    
+    if (file) {
+      formData.append('file', file);
+    }
+    
+    return this.http.put<Ticket>(`${environment.apiUrl}/api/tickets/${id}/media`, formData);
   }
 }

@@ -5,18 +5,20 @@ import {
   Ticket,
   TicketStatus,
   TicketPriority,
+  ContentType
 } from '../../models/ticket.model';
 import { User } from '../../models/user.model';
 import { TicketService } from '../ticket.service';
 import { AuthService } from '../../auth/auth.service';
 import { UserService } from '../../auth/user.service';
 import { Role } from '../../models/role.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-ticket-detail',
   standalone: false,
   templateUrl: './ticket-detail.component.html',
-  styleUrl: './ticket-detail.component.scss',
+  styleUrls: ['./ticket-detail.component.scss'],
 })
 export class TicketDetailComponent implements OnInit {
   ticket: Ticket | null = null;
@@ -24,8 +26,12 @@ export class TicketDetailComponent implements OnInit {
   ticketId!: number;
   ticketStatus = TicketStatus;
   ticketPriority = TicketPriority;
+  contentType = ContentType;
   users: User[] = [];
   selectedAssigneeId: number | null = null;
+  
+  // For media content
+  mediaUrl: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -52,6 +58,16 @@ export class TicketDetailComponent implements OnInit {
       next: (ticket) => {
         this.ticket = ticket;
         this.selectedAssigneeId = ticket.assignedTo?.id || null;
+        
+        // Handle media URL
+        if (ticket.contentType === ContentType.IMAGE && ticket.imagePath) {
+          this.mediaUrl = `${environment.apiUrl}/api/files/${ticket.imagePath}`;
+        } else if (ticket.contentType === ContentType.AUDIO && ticket.audioPath) {
+          this.mediaUrl = `${environment.apiUrl}/api/files/${ticket.audioPath}`;
+        } else {
+          this.mediaUrl = null;
+        }
+        
         this.loading = false;
         console.log('Ticket loaded successfully', ticket);
       },
@@ -143,6 +159,10 @@ export class TicketDetailComponent implements OnInit {
       });
   }
 
+  get canUpdateStatus(): boolean {
+    return this.authService.isAdmin() || this.authService.isSupport();
+  }
+
   getStatusClass(status: TicketStatus): string {
     switch (status) {
       case TicketStatus.OPEN:
@@ -177,6 +197,16 @@ export class TicketDetailComponent implements OnInit {
     this.loadTicket();
   }
 
+  get canViewComments(): boolean {
+    if (!this.ticket) return false;
+    const currentUser = this.authService.getCurrentUser();
+    return (
+      !!currentUser &&
+      (this.authService.isAdmin() || this.authService.isSupport() ||
+       currentUser.id === this.ticket.creator?.id || currentUser.id === this.ticket.assignedTo?.id)
+    );
+  }
+
   get canEdit(): boolean {
     if (!this.ticket) return false;
     const currentUser = this.authService.getCurrentUser();
@@ -190,8 +220,7 @@ export class TicketDetailComponent implements OnInit {
 
   get canAssign(): boolean {
     return (
-      this.authService.isAdmin() || this.authService.hasRole('ROLE_SUPPORT' as unknown as Role)
-    );
+      this.authService.isAdmin() || this.authService.isSupport());
   }
 
   get canDelete(): boolean {

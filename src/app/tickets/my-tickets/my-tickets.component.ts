@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Ticket, TicketStatus, TicketPriority } from '../../models/ticket.model';
+import { Ticket, TicketStatus, TicketPriority, ContentType } from '../../models/ticket.model';
 import { TicketService } from '../ticket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './my-tickets.component.scss'
 })
 export class MyTicketsComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'title', 'status', 'priority', 'assignedTo', 'createdAt', 'actions'];
+  displayedColumns: string[] = ['id', 'title', 'status', 'priority', 'contentType', 'assignedTo', 'createdAt', 'actions'];
   dataSource = new MatTableDataSource<Ticket>([]);
   loading = false;
   totalElements = 0;
@@ -22,6 +22,7 @@ export class MyTicketsComponent implements OnInit {
   pageSize = 10;
   ticketStatus = TicketStatus;
   ticketPriority = TicketPriority;
+  contentType = ContentType;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -85,6 +86,19 @@ export class MyTicketsComponent implements OnInit {
 
   createNewTicket(): void {
     this.router.navigate(['/tickets/new']);
+  }
+
+  getContentTypeIcon(contentType: ContentType): string {
+    switch (contentType) {
+      case ContentType.TEXT:
+        return 'notes';
+      case ContentType.IMAGE:
+        return 'image';
+      case ContentType.AUDIO:
+        return 'audiotrack';
+      default:
+        return 'notes';
+    }
   }
 
   getStatusClass(status: TicketStatus): string {
